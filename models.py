@@ -23,6 +23,7 @@ class User(UserMixin, db.Model):
     games = db.relationship(
     "Game",
     backref="player",
+    cascade="all, delete-orphan",
     lazy=True,
     )
 class Word(db.Model):
@@ -34,18 +35,57 @@ class Word(db.Model):
         unique=True,
         nullable=False
     )
+from datetime import date
+
 class Game(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
     user_id = db.Column(
-    db.Integer,
-    db.ForeignKey("user.id"),
-    nullable=False
+        db.Integer,
+        db.ForeignKey("user.id"),
+        nullable=False
     )
 
     actual_word = db.Column(
         db.String(5),
+        nullable=False
+    )
+
+    game_date = db.Column(
+        db.Date,
+        default=date.today,
+        nullable=False
+    )
+
+    won = db.Column(
+        db.Boolean,
+        default=False
+    )
+
+    completed = db.Column(
+        db.Boolean,
+        default=False
+    )
+
+    guesses = db.relationship(
+        "Guess",
+        backref="game",
+        cascade="all, delete-orphan",
+        lazy=True
+    )
+
+    def __repr__(self):
+        return f"<Game {self.id} - {self.actual_word}>"
+from datetime import datetime
+
+class Guess(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    game_id = db.Column(
+        db.Integer,
+        db.ForeignKey("game.id"),
         nullable=False
     )
 
@@ -61,10 +101,13 @@ class Game(db.Model):
 
     correct = db.Column(
         db.Boolean,
-        nullable=False
+        default=False
     )
 
-    date = db.Column(
-        db.Date,
-        nullable=False
+    guessed_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
     )
+
+    def __repr__(self):
+        return f"<Guess {self.guess_word}>"
