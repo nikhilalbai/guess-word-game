@@ -8,12 +8,61 @@
 
     <hr>
 
-    <h4>Game Started!</h4>
+    <form method="POST">
 
-    <p>
-        Secret word selected successfully.
-    </p>
-    <p>Game ID: {{ game_id }}</p>
+        <div class="mb-3">
+
+            <label class="form-label">
+                Enter a 5-letter word
+            </label>
+
+            <input
+                type="text"
+                name="guess"
+                maxlength="5"
+                class="form-control"
+                style="text-transform: uppercase;"
+                required>
+
+        </div>
+
+        <button class="btn btn-primary">
+            Submit Guess
+        </button>
+
+    </form>
+
+    <hr>
+
+    <h4>Previous Guesses</h4>
+
+    {% for guess in guess_results %}
+
+        <p>
+
+        {% for i in range(5) %}
+
+            <span
+                style="
+                    display:inline-block;
+                    width:40px;
+                    height:40px;
+                    line-height:40px;
+                    text-align:center;
+                    color:white;
+                    margin:2px;
+                    background-color:{{ guess.colors[i] }};
+                ">
+
+                {{ guess.word[i] }}
+
+            </span>
+
+        {% endfor %}
+
+        </p>
+
+    {% endfor %}
 
 </div>
 
