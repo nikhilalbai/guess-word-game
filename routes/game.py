@@ -185,6 +185,22 @@ def play_game():
 
             return redirect(url_for("game.play_game"))
 
+                # Check whether word exists in dictionary
+
+        valid_word = Word.query.filter_by(
+            word=guess_word
+        ).first()
+
+
+        if not valid_word:
+
+            flash(
+                "This word is not in our dictionary.",
+                "danger"
+            )
+
+            return redirect(url_for("game.play_game"))
+
         guess = Guess(
 
             game_id=current_game.id,
