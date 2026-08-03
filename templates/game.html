@@ -2,67 +2,79 @@
 
 {% block content %}
 
-<div class="container mt-5">
+<div class="container">
 
-    <h2>Guess The Word</h2>
+<h2 class="text-center mt-4">
 
-    <hr>
+Guess The Word
 
-    <form method="POST">
+</h2>
 
-        <div class="mb-3">
+<div class="game-board">
 
-            <label class="form-label">
-                Enter a 5-letter word
-            </label>
+{% for guess in guess_results %}
 
-            <input
-                type="text"
-                name="guess"
-                maxlength="5"
-                class="form-control"
-                style="text-transform: uppercase;"
-                required>
+<div class="row-box">
 
-        </div>
+{% for i in range(5) %}
 
-        <button class="btn btn-primary">
-            Submit Guess
-        </button>
+<div class="letter-box {{ guess.colors[i] }}">
 
-    </form>
+{{ guess.word[i] }}
 
-    <hr>
+</div>
 
-    <h4>Previous Guesses</h4>
+{% endfor %}
 
-    {% for guess in guess_results %}
+</div>
 
-        <p>
+{% endfor %}
 
-        {% for i in range(5) %}
+{% for i in range(5 - guess_results|length) %}
 
-            <span
-                style="
-                    display:inline-block;
-                    width:40px;
-                    height:40px;
-                    line-height:40px;
-                    text-align:center;
-                    color:white;
-                    margin:2px;
-                    background-color:{{ guess.colors[i] }};
-                ">
+<div class="row-box">
 
-                {{ guess.word[i] }}
+{% for j in range(5) %}
 
-            </span>
+<div class="letter-box empty">
 
-        {% endfor %}
+</div>
 
-        </p>
+{% endfor %}
 
-    {% endfor %}
+</div>
+
+{% endfor %}
+
+</div>
+
+<hr>
+
+<form method="POST">
+
+<input
+
+type="text"
+
+name="guess"
+
+maxlength="5"
+
+class="form-control"
+
+style="text-transform:uppercase"
+
+required>
+
+<br>
+
+<button class="btn btn-primary">
+
+Submit Guess
+
+</button>
+
+</form>
 
 </div>
 
