@@ -2,79 +2,92 @@
 
 {% block content %}
 
-<div class="container">
+<div class="container mt-4">
 
-<h2 class="text-center mt-4">
+    <div class="card shadow-sm">
 
-Guess The Word
+        <div class="card-body">
 
-</h2>
+            <h2 class="text-center mb-2">
+                🎯 Guess The Word
+            </h2>
 
-<div class="game-board">
+            <p class="text-center text-muted">
+                Guess the hidden 5-letter English word.
+            </p>
 
-{% for guess in guess_results %}
+            <hr>
 
-<div class="row-box">
+            <!-- Previous Guesses -->
 
-{% for i in range(5) %}
+            {% for guess in guess_results %}
 
-<div class="letter-box {{ guess.colors[i] }}">
+            <div class="guess-row">
 
-{{ guess.word[i] }}
+                {% for i in range(5) %}
 
-</div>
+                <div class="letter-box {{ guess.colors[i] }}">
 
-{% endfor %}
+                    {{ guess.word[i] }}
 
-</div>
+                </div>
 
-{% endfor %}
+                {% endfor %}
 
-{% for i in range(5 - guess_results|length) %}
+            </div>
 
-<div class="row-box">
+            {% endfor %}
 
-{% for j in range(5) %}
+            <!-- Empty Rows -->
 
-<div class="letter-box empty">
+            {% for i in range(5 - guess_results|length) %}
 
-</div>
+            <div class="guess-row">
 
-{% endfor %}
+                {% for j in range(5) %}
 
-</div>
+                <div class="letter-box empty">
 
-{% endfor %}
+                </div>
 
-</div>
+                {% endfor %}
 
-<hr>
+            </div>
 
-<form method="POST">
+            {% endfor %}
 
-<input
+            <hr>
 
-type="text"
+            <form method="POST">
 
-name="guess"
+                <div class="mb-3">
 
-maxlength="5"
+                    <input
+                        type="text"
+                        name="guess"
+                        maxlength="5"
+                        class="form-control text-uppercase text-center"
+                        placeholder="Enter 5-letter word"
+                        autocomplete="off"
+                        required>
 
-class="form-control"
+                </div>
 
-style="text-transform:uppercase"
+                <div class="d-grid">
 
-required>
+                    <button class="btn btn-primary btn-lg">
 
-<br>
+                        Submit Guess
 
-<button class="btn btn-primary">
+                    </button>
 
-Submit Guess
+                </div>
 
-</button>
+            </form>
 
-</form>
+        </div>
+
+    </div>
 
 </div>
 

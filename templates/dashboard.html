@@ -2,26 +2,169 @@
 
 {% block content %}
 
-<div class="container mt-5">
+<div class="container mt-4">
 
-    <h2>Welcome {{ current_user.username }}</h2>
+    <!-- Welcome Card -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
 
-    <hr>
+            <h2 class="mb-2">
+                <i class="bi bi-speedometer2 text-primary"></i>
+                Dashboard
+            </h2>
 
-    <p>
+            <p class="fs-5 mb-0">
+                Welcome back,
+                <strong class="text-primary">
+                    {{ current_user.username }}
+                </strong>
+                👋
+            </p>
 
-        Games Played Today:
+        </div>
+    </div>
 
-        <strong>{{ games_today }}/3</strong>
+    <!-- Statistics -->
+    <div class="row">
 
-    </p>
+        <div class="col-md-4 mb-3">
 
-    <a href="{{ url_for('game.start_game') }}"
-       class="btn btn-success">
+            <div class="card text-center h-100 shadow-sm">
 
-        Start New Game
+                <div class="card-body">
 
-    </a>
+                    <i class="bi bi-controller fs-1 text-primary"></i>
+
+                    <h6 class="mt-3">
+                        Games Today
+                    </h6>
+
+                    <h2 class="text-primary">
+                        {{ games_today }}/3
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4 mb-3">
+
+            <div class="card text-center h-100 shadow-sm">
+
+                <div class="card-body">
+
+                    <i class="bi bi-trophy-fill fs-1 text-warning"></i>
+
+                    <h6 class="mt-3">
+                        Total Wins
+                    </h6>
+
+                    <h2 class="text-warning">
+                        {{ total_wins }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4 mb-3">
+
+            <div class="card text-center h-100 shadow-sm">
+
+                <div class="card-body">
+
+                    <i class="bi bi-bar-chart-fill fs-1 text-success"></i>
+
+                    <h6 class="mt-3">
+                        Total Games
+                    </h6>
+
+                    <h2 class="text-success">
+                        {{ total_games }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Status -->
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <h5>
+
+                <i class="bi bi-activity"></i>
+
+                Current Status
+
+            </h5>
+
+            <p class="fs-5 mt-3">
+
+                {{ status }}
+
+            </p>
+
+            <div class="d-grid mt-4">
+
+                <a href="{{ url_for('game.start_game') }}"
+                   class="btn btn-primary btn-lg">
+
+                    <i class="bi bi-play-fill"></i>
+
+                    {{ button_text }}
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Rules -->
+    <div class="card shadow-sm">
+
+        <div class="card-body">
+
+            <h5>
+
+                <i class="bi bi-lightbulb-fill text-warning"></i>
+
+                Game Rules
+
+            </h5>
+
+            <hr>
+
+            <ul class="mb-0">
+
+                <li>Maximum <strong>3 games per day</strong>.</li>
+
+                <li>Each game allows <strong>5 guesses</strong>.</li>
+
+                <li>Only <strong>5-letter English words</strong> are accepted.</li>
+
+                <li>🟩 Green = Correct letter in the correct position.</li>
+
+                <li>🟧 Orange = Correct letter in the wrong position.</li>
+
+                <li>⬜ Gray = Letter is not present in the word.</li>
+
+            </ul>
+
+        </div>
+
+    </div>
 
 </div>
 

@@ -1,26 +1,55 @@
 body{
-    background:#f4f4f4;
-    font-family:Arial, Helvetica, sans-serif;
+    background:#f4f6f9;
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
 }
 
-.game-board{
-    margin-top:30px;
+.navbar{
+    border-radius:0 0 12px 12px;
 }
 
-.row-box{
+.card{
+    border:none;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.btn{
+    border-radius:10px;
+}
+
+.form-control{
+    border-radius:10px;
+}
+
+footer{
+    margin-top:60px;
+}
+.form-control:focus{
+    border-color:#2563eb;
+    box-shadow:0 0 0 .2rem rgba(37,99,235,.2);
+}
+
+.card:hover{
+    transform:translateY(-3px);
+    transition:.3s;
+}
+/* ===========================
+   Guess Board
+=========================== */
+
+.guess-row{
     display:flex;
     justify-content:center;
-    margin-bottom:8px;
+    margin-bottom:10px;
 }
 
 .letter-box{
-
     width:60px;
     height:60px;
 
-    border:2px solid #999;
-
     margin:4px;
+
+    border-radius:10px;
 
     display:flex;
 
@@ -28,28 +57,35 @@ body{
 
     align-items:center;
 
-    font-size:28px;
+    font-size:26px;
 
     font-weight:bold;
 
+    color:white;
+
     text-transform:uppercase;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.15);
 }
 
 .green{
-    background:#6aaa64;
-    color:white;
+    background:#22c55e;
 }
 
 .orange{
-    background:#c9b458;
-    color:white;
+    background:#f59e0b;
 }
 
 .gray{
-    background:#787c7e;
-    color:white;
+    background:#6b7280;
 }
 
 .empty{
+
     background:white;
+
+    border:2px solid #d1d5db;
+
+    color:transparent;
+
 }

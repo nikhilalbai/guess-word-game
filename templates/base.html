@@ -4,83 +4,93 @@
 <head>
 
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess The Word</title>
 
-    <title>{% block title %}Guess Word Game{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
 
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+          rel="stylesheet">
 
-    <link
-    rel="stylesheet"
-    href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Custom CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
 </head>
 
 <body>
 
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
 
-    <div class="container">
+        <div class="container">
 
-        <a class="navbar-brand" href="{{ url_for('home') }}">
-            Guess Word Game
-        </a>
+            <a class="navbar-brand fw-bold"
+               href="{{ url_for('home') }}">
 
-        <div>
+                <i class="bi bi-bullseye"></i>
+
+                Guess The Word
+
+            </a>
 
             {% if current_user.is_authenticated %}
 
-                <a class="btn btn-outline-light me-2"
-                   href="{{ url_for('game.dashboard') }}">
-                    Dashboard
-                </a>
+            <div class="d-flex align-items-center">
 
-                <a class="btn btn-danger"
-                   href="{{ url_for('auth.logout') }}">
+                <span class="text-white me-3">
+
+                    <i class="bi bi-person-circle"></i>
+
+                    {{ current_user.username }}
+
+                </span>
+
+                <a href="{{ url_for('auth.logout') }}"
+                   class="btn btn-light btn-sm">
+
+                    <i class="bi bi-box-arrow-right"></i>
+
                     Logout
+
                 </a>
 
-            {% else %}
-
-                <a class="btn btn-outline-light me-2"
-                   href="{{ url_for('auth.login') }}">
-                    Login
-                </a>
-
-                <a class="btn btn-success"
-                   href="{{ url_for('auth.register') }}">
-                    Register
-                </a>
+            </div>
 
             {% endif %}
 
         </div>
 
-    </div>
+    </nav>
 
-</nav>
+    <!-- Main Content -->
 
-    <div class="container mt-4">
+    <div class="container py-4">
 
-        <!-- Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
+
             {% if messages %}
+
                 {% for category, message in messages %}
 
                     <div class="alert alert-{{ category }} alert-dismissible fade show">
 
                         {{ message }}
 
-                        <button type="button"
-                                class="btn-close"
+                        <button class="btn-close"
                                 data-bs-dismiss="alert">
                         </button>
 
                     </div>
 
                 {% endfor %}
+
             {% endif %}
+
         {% endwith %}
 
         {% block content %}
@@ -88,7 +98,23 @@
 
     </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Footer -->
+
+    <footer class="text-center text-muted py-4">
+
+        <hr>
+
+        <small>
+
+            Guess The Word © 2026
+
+        </small>
+
+    </footer>
+
+    <!-- Bootstrap JS -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 
