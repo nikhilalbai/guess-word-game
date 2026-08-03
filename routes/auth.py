@@ -7,7 +7,7 @@ from flask import flash
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 
-from flask_login import login_user
+from flask_login import login_user, logout_user, login_required
 
 from extensions import db
 
@@ -106,3 +106,12 @@ def login():
         "login.html",
         form=form,
     )
+@auth.route("/logout")
+@login_required
+def logout():
+
+    logout_user()
+
+    flash("You have been logged out successfully.", "success")
+
+    return redirect(url_for("auth.login"))
