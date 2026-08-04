@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2>
+
+            <i class="bi bi-controller"></i>
+
+            Game Management
+
+        </h2>
+
+        <a href="{{ url_for('admin.dashboard') }}"
+           class="btn btn-secondary">
+
+            Back
+
+        </a>
+
+    </div>
+
+    <form method="GET" class="row mb-4">
+
+    <div class="col-md-5">
+
+        <input
+            type="text"
+            class="form-control"
+            name="search"
+            placeholder="Search username..."
+            value="{{ search }}">
+
+    </div>
+
+    <div class="col-md-3">
+
+        <select
+            class="form-select"
+            name="status">
+
+            <option value=""
+                {% if status == "" %}selected{% endif %}>
+                All Games
+            </option>
+
+            <option value="completed"
+                {% if status == "completed" %}selected{% endif %}>
+                Completed
+            </option>
+
+            <option value="active"
+                {% if status == "active" %}selected{% endif %}>
+                In Progress
+            </option>
+
+        </select>
+
+    </div>
+
+    <div class="col-md-2">
+
+        <button
+            class="btn btn-primary w-100">
+
+            Apply
+
+        </button>
+
+    </div>
+
+    <div class="col-md-2">
+
+        <a href="{{ url_for('admin.games') }}"
+           class="btn btn-secondary w-100">
+
+            Clear
+
+        </a>
+
+    </div>
+
+</form>
+
+    <table class="table table-bordered table-hover align-middle">
+
+        <thead class="table-dark">
+
+            <tr>
+
+                <th>ID</th>
+
+                <th>Player</th>
+
+                <th>Secret Word</th>
+
+                <th>Date</th>
+
+                <th>Won</th>
+
+                <th>Status</th>
+
+                <th>Guesses</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for game in games %}
+
+            <tr>
+
+                <td>{{ game.id }}</td>
+
+                <td>{{ game.player.username }}</td>
+
+                <td>{{ game.actual_word }}</td>
+
+                <td>{{ game.game_date }}</td>
+
+                <td>
+
+                    {% if game.won %}
+
+                        <span class="badge bg-success">
+
+                            Won
+
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-danger">
+
+                            Lost
+
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+
+                    {% if game.completed %}
+
+                        <span class="badge bg-primary">
+
+                            Completed
+
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-warning text-dark">
+
+                            In Progress
+
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+
+                    {{ game.guesses|length }}/5
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

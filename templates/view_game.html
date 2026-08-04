@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2>
+
+            🎮 Game Replay
+
+        </h2>
+
+        <a href="{{ url_for('game.history') }}"
+           class="btn btn-secondary">
+
+            <i class="bi bi-arrow-left"></i>
+
+            Back
+
+        </a>
+
+    </div>
+
+    <div class="card shadow-sm p-4">
+
+        <h5>
+
+            Date:
+            {{ game.game_date }}
+
+        </h5>
+
+        <h5>
+
+            Result:
+
+            {% if game.won %}
+
+                <span class="badge bg-success">
+
+                    Won
+
+                </span>
+
+            {% else %}
+
+                <span class="badge bg-danger">
+
+                    Lost
+
+                </span>
+
+            {% endif %}
+
+        </h5>
+
+        <hr>
+
+        {% for guess in guess_results %}
+
+        <div class="mb-3">
+
+            <strong>
+
+                Guess {{ guess.number }}
+
+            </strong>
+
+            <br><br>
+
+            {% for i in range(5) %}
+
+                <span
+                    style="
+                        display:inline-block;
+                        width:45px;
+                        height:45px;
+                        line-height:45px;
+                        text-align:center;
+                        color:white;
+                        font-weight:bold;
+                        margin:2px;
+                        background-color:{{ guess.colors[i] }};
+                    ">
+
+                    {{ guess.word[i] }}
+
+                </span>
+
+            {% endfor %}
+
+        </div>
+
+        {% endfor %}
+
+        <hr>
+
+        <h5>
+
+            Secret Word:
+
+            <span class="text-primary">
+
+                {{ game.actual_word }}
+
+            </span>
+
+        </h5>
+
+    </div>
+
+</div>
+
+{% endblock %}

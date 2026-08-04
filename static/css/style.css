@@ -89,3 +89,55 @@ footer{
     color:transparent;
 
 }
+/* ===========================
+   Word Game Board
+=========================== */
+
+.letter-box{
+
+    width:60px;
+
+    height:60px;
+
+    display:inline-flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    margin:4px;
+
+    font-size:24px;
+
+    font-weight:bold;
+
+    color:white;
+
+    border-radius:8px;
+}
+
+.green{
+
+    background:#28a745;
+}
+
+.orange{
+
+    background:#ffc107;
+
+    color:black;
+}
+
+.gray{
+
+    background:#6c757d;
+}
+
+.empty{
+
+    background:white;
+
+    border:2px solid #dcdcdc;
+
+    color:white;
+}

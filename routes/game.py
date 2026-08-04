@@ -17,7 +17,7 @@ from flask_login import (
 )
 
 from extensions import db
-from models import Game, Word, Guess
+from models import Game, Word, Guess, User
 from utils import check_guess
 
 game = Blueprint("game", __name__)
@@ -271,4 +271,184 @@ def play_game():
     return render_template(
         "game.html",
         guess_results=guess_results
+    )
+
+
+@game.route("/leaderboard")
+@login_required
+def leaderboard():
+
+    users = User.query.all()
+
+    leaderboard = []
+
+    for user in users:
+
+        total_games = len(user.games)
+
+        total_wins = sum(
+            1 for game in user.games
+            if game.won
+        )
+
+        total_guesses = sum(
+            len(game.guesses)
+            for game in user.games
+        )
+
+        if total_games > 0:
+
+            win_rate = round(
+                (total_wins / total_games) * 100,
+                1
+            )
+
+        else:
+
+            win_rate = 0
+
+        leaderboard.append({
+
+            "username": user.username,
+
+            "games": total_games,
+
+            "wins": total_wins,
+
+            "guesses": total_guesses,
+
+            "win_rate": win_rate,
+
+            "is_current_user": (
+                user.id == current_user.id
+            )
+
+        })
+
+    leaderboard.sort(
+
+        key=lambda player: (
+
+            player["wins"],
+            player["win_rate"],
+            -player["guesses"]
+
+        ),
+
+        reverse=True
+
+    )
+
+    return render_template(
+
+        "leaderboard.html",
+
+        leaderboard=leaderboard
+
+    )
+@game.route("/profile")
+@login_required
+def profile():
+
+    total_games = Game.query.filter_by(
+        user_id=current_user.id
+    ).count()
+
+    total_wins = Game.query.filter_by(
+        user_id=current_user.id,
+        won=True
+    ).count()
+
+    losses = total_games - total_wins
+
+    if total_games > 0:
+
+        win_rate = round(
+            (total_wins / total_games) * 100,
+            1
+        )
+
+    else:
+
+        win_rate = 0
+
+    return render_template(
+
+        "profile.html",
+
+        total_games=total_games,
+
+        total_wins=total_wins,
+
+        losses=losses,
+
+        win_rate=win_rate
+
+    )
+@game.route("/history")
+@login_required
+def history():
+
+    games = Game.query.filter_by(
+        user_id=current_user.id
+    ).order_by(
+        Game.game_date.desc(),
+        Game.id.desc()
+    ).all()
+
+    return render_template(
+        "history.html",
+        games=games
+    )
+@game.route("/history/<int:game_id>")
+@login_required
+def view_game(game_id):
+
+    game = Game.query.filter_by(
+        id=game_id,
+        user_id=current_user.id
+    ).first()
+
+    if game is None:
+
+        flash(
+            "Game not found.",
+            "danger"
+        )
+
+        return redirect(url_for("game.history"))
+
+    guesses = Guess.query.filter_by(
+        game_id=game.id
+    ).order_by(
+        Guess.guess_number
+    ).all()
+
+    guess_results = []
+
+    for guess in guesses:
+
+        colors = check_guess(
+            game.actual_word,
+            guess.guess_word
+        )
+
+        guess_results.append({
+
+            "word": guess.guess_word,
+
+            "colors": colors,
+
+            "number": guess.guess_number
+
+        })
+
+    return render_template(
+
+        "view_game.html",
+
+        game=game,
+
+        guess_results=guess_results
+
     )

@@ -2,88 +2,165 @@
 
 {% block content %}
 
-<div class="container mt-4">
+<div class="container mt-5">
 
-    <div class="card shadow-sm">
+    <div class="row justify-content-center">
 
-        <div class="card-body">
+        <div class="col-lg-8">
 
-            <h2 class="text-center mb-2">
-                🎯 Guess The Word
-            </h2>
+            <div class="card shadow p-4">
 
-            <p class="text-center text-muted">
-                Guess the hidden 5-letter English word.
-            </p>
+                <h2 class="text-center mb-4">
+                    🎮 Guess The Word
+                </h2>
 
-            <hr>
+                <!-- Attempts Left -->
 
-            <!-- Previous Guesses -->
+                <div class="text-center mb-4">
 
-            {% for guess in guess_results %}
+                    <h5>
 
-            <div class="guess-row">
+                        Attempts Left:
 
-                {% for i in range(5) %}
+                        <span class="badge bg-primary">
 
-                <div class="letter-box {{ guess.colors[i] }}">
+                            {{ attempts_left }}
 
-                    {{ guess.word[i] }}
+                        </span>
+
+                    </h5>
 
                 </div>
 
-                {% endfor %}
+                <!-- Guess Board -->
+
+                <div class="text-center">
+
+                    {% for row in range(5) %}
+
+                        <div class="mb-2">
+
+                            {% if row < guess_results|length %}
+
+                                {% set guess = guess_results[row] %}
+
+                                {% for i in range(5) %}
+
+                                    <span class="letter-box {{ guess.colors[i] }}">
+
+                                        {{ guess.word[i] }}
+
+                                    </span>
+
+                                {% endfor %}
+
+                            {% else %}
+
+                                {% for i in range(5) %}
+
+                                    <span class="letter-box empty">
+
+                                    </span>
+
+                                {% endfor %}
+
+                            {% endif %}
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+                <hr>
+
+                <!-- Input -->
+
+                {% if not game_completed %}
+
+                <form method="POST">
+
+                    <div class="row justify-content-center">
+
+                        <div class="col-md-6">
+
+                            <input
+
+                                type="text"
+
+                                name="guess"
+
+                                maxlength="5"
+
+                                class="form-control form-control-lg text-center"
+
+                                style="text-transform:uppercase;"
+
+                                placeholder="Enter 5-letter word"
+
+                                required
+
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <div class="text-center mt-3">
+
+                        <button class="btn btn-primary btn-lg">
+
+                            Submit Guess
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+                {% else %}
+
+                    <div class="text-center">
+
+                        <a href="{{ url_for('game.dashboard') }}"
+
+                           class="btn btn-success">
+
+                            Back to Dashboard
+
+                        </a>
+
+                    </div>
+
+                {% endif %}
+
+                <hr>
+
+                <!-- Legend -->
+
+                <h5>Legend</h5>
+
+                <div>
+
+                    <span class="letter-box green">A</span>
+
+                    Correct Letter
+
+                    <br><br>
+
+                    <span class="letter-box orange">A</span>
+
+                    Wrong Position
+
+                    <br><br>
+
+                    <span class="letter-box gray">A</span>
+
+                    Not Present
+
+                </div>
 
             </div>
-
-            {% endfor %}
-
-            <!-- Empty Rows -->
-
-            {% for i in range(5 - guess_results|length) %}
-
-            <div class="guess-row">
-
-                {% for j in range(5) %}
-
-                <div class="letter-box empty">
-
-                </div>
-
-                {% endfor %}
-
-            </div>
-
-            {% endfor %}
-
-            <hr>
-
-            <form method="POST">
-
-                <div class="mb-3">
-
-                    <input
-                        type="text"
-                        name="guess"
-                        maxlength="5"
-                        class="form-control text-uppercase text-center"
-                        placeholder="Enter 5-letter word"
-                        autocomplete="off"
-                        required>
-
-                </div>
-
-                <div class="d-grid">
-
-                    <button class="btn btn-primary btn-lg">
-
-                        Submit Guess
-
-                    </button>
-
-                </div>
-
-            </form>
 
         </div>
 

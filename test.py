@@ -1,5 +1,19 @@
-from utils import check_guess
+from app import app
+from extensions import db
+from models import User
 
-print(check_guess("APPLE", "AMPLE"))
-print(check_guess("APPLE", "LEMON"))
-print(check_guess("HOUSE", "MOUSE"))
+with app.app_context():
+
+    user = User.query.filter_by(username="Nikhil").first()
+
+    if user:
+
+        user.role = "ADMIN"
+
+        db.session.commit()
+
+        print("User is now ADMIN.")
+
+    else:
+
+        print("User not found.")
