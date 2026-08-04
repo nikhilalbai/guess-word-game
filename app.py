@@ -28,10 +28,16 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
+from flask import redirect, url_for
+from flask_login import current_user
+
 @app.route("/")
 def home():
-    return render_template("index.html")
 
+    if current_user.is_authenticated:
+        return redirect(url_for("game.dashboard"))
+
+    return redirect(url_for("auth.register"))
 
 with app.app_context():
     db.create_all()
