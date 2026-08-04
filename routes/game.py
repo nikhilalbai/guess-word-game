@@ -20,7 +20,6 @@ from extensions import db
 from models import Game, Word, Guess
 from utils import check_guess
 
-
 game = Blueprint("game", __name__)
 
 
@@ -48,7 +47,8 @@ def dashboard():
 
     active_game = Game.query.filter_by(
         user_id=current_user.id,
-        completed=False
+        completed=False,
+        game_date=date.today()
     ).first()
 
     if active_game:
@@ -76,16 +76,15 @@ def dashboard():
 @login_required
 def start_game():
 
-    # Continue unfinished game
+    # Continue today's unfinished game
     active_game = Game.query.filter_by(
         user_id=current_user.id,
-        completed=False
+        completed=False,
+        game_date=date.today()
     ).first()
 
     if active_game:
-
         session["game_id"] = active_game.id
-
         return redirect(url_for("game.play_game"))
 
     # Daily limit
@@ -109,15 +108,11 @@ def start_game():
     secret_word = random.choice(words)
 
     new_game = Game(
-
         user_id=current_user.id,
-
         actual_word=secret_word.word
-
     )
 
     db.session.add(new_game)
-
     db.session.commit()
 
     session["game_id"] = new_game.id
@@ -148,34 +143,31 @@ def play_game():
 
     if current_game is None:
 
+        session.pop("game_id", None)
+
         flash(
             "Game not found.",
             "danger"
         )
 
-        session.pop("game_id", None)
-
         return redirect(url_for("game.dashboard"))
 
     if current_game.completed:
+
+        session.pop("game_id", None)
 
         flash(
             "This game has already finished.",
             "warning"
         )
 
-        session.pop("game_id", None)
-
         return redirect(url_for("game.dashboard"))
-
-    # --------------------
-    # User submitted guess
-    # --------------------
 
     if request.method == "POST":
 
         guess_word = request.form["guess"].strip().upper()
 
+        # Validate input
         if len(guess_word) != 5 or not guess_word.isalpha():
 
             flash(
@@ -185,12 +177,10 @@ def play_game():
 
             return redirect(url_for("game.play_game"))
 
-                # Check whether word exists in dictionary
-
+        # Validate dictionary
         valid_word = Word.query.filter_by(
             word=guess_word
         ).first()
-
 
         if not valid_word:
 
@@ -201,27 +191,33 @@ def play_game():
 
             return redirect(url_for("game.play_game"))
 
+        # Maximum guesses reached
+        if len(current_game.guesses) >= 5:
+
+            flash(
+                "Maximum 5 guesses reached.",
+                "danger"
+            )
+
+            return redirect(url_for("game.dashboard"))
+
+        guess_number = len(current_game.guesses) + 1
+
         guess = Guess(
-
             game_id=current_game.id,
-
             guess_word=guess_word,
-
-            guess_number=len(current_game.guesses) + 1
-
+            guess_number=guess_number,
+            correct=False
         )
 
         db.session.add(guess)
-
         db.session.commit()
 
         # Correct Guess
         if guess_word == current_game.actual_word:
 
             guess.correct = True
-
             current_game.won = True
-
             current_game.completed = True
 
             db.session.commit()
@@ -235,8 +231,8 @@ def play_game():
 
             return redirect(url_for("game.dashboard"))
 
-        # Maximum attempts reached
-        if len(current_game.guesses) >= 5:
+        # Fifth wrong guess
+        if guess_number == 5:
 
             current_game.completed = True
 
@@ -250,10 +246,6 @@ def play_game():
             )
 
             return redirect(url_for("game.dashboard"))
-
-    # --------------------
-    # Display Previous Guesses
-    # --------------------
 
     guesses = Guess.query.filter_by(
         game_id=current_game.id
@@ -271,13 +263,9 @@ def play_game():
         )
 
         guess_results.append({
-
             "word": guess.guess_word,
-
             "colors": colors,
-
             "number": guess.guess_number
-
         })
 
     return render_template(
